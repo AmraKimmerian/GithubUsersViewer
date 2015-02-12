@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">GithubUsersViewer</string>
+    <string name="start">start</string>
+    <string name="clear_cache_menu">Clear cache</string>
+    <string name="warn">Couldn\'t get any data. Check your Internet connection.</string>
+    <string name="try_again">Try again</string>
+
+</resources>
