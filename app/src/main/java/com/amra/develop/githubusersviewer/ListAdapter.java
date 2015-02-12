@@ -55,8 +55,8 @@ public class ListAdapter extends BaseAdapter {
     // пункт списка
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Log.i("MY", ": adapter.getView " + position);
-        // используем созданные, но не используемые view
+        //Log.i("MY", ": adapter.getView " + position);
+
         View view = convertView;
         if (view == null) {
             view = lInflater.inflate(R.layout.list_item, parent, false);
@@ -70,28 +70,9 @@ public class ListAdapter extends BaseAdapter {
         if (logins[position] != null) {
             ViewHolder holder = (ViewHolder) view.getTag();
             holder.hLogin.setText(logins[position]);
-            // holder.hAvatar.set...
+            // Lazy image loading
             imageLoader.DisplayImage(avatar_urls[position],  holder.hAvatar);
         }
-
-
-
-        //TextView title =  (TextView) view.findViewById(R.id.login);
-        //title.setText(logins[position]);
-
-        //ImageView img = (ImageView) view.findViewById(R.id.avatar);
-
-        // If image[position] is in cash - take it
-       /* if (false) {
-
-        }
-        // load via AsyncTask
-        else {
-
-        }*/
-
-
-
         return view;
     }
 

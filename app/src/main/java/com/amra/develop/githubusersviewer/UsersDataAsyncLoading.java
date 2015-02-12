@@ -37,30 +37,10 @@ public class UsersDataAsyncLoading extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         Log.i("MY", " result: "+result);
-        String[] logins, avatar_urls;
+        //String[] logins, avatar_urls;
 
-       if (result != null) {
-            try {
-                // Create an JSON array from result string: [ {...}, ..., {...}]
-                JSONArray jsonarray = new JSONArray(result);
-                // Create simple arrays with data
-                logins = new String[jsonarray.length()];
-                avatar_urls = new String[jsonarray.length()];
-                for(int i=0; i<jsonarray.length(); i++){
-                    JSONObject obj = jsonarray.getJSONObject(i);
-                    logins[i] = obj.getString("login");
-                    avatar_urls[i] = obj.getString("avatar_url");
-                }
-                // pass array to fragment
-                fragment.logins = logins;
-                fragment.avatar_urls = avatar_urls;
-                // build UI
-                fragment.buildList();
-
-            } catch (JSONException e) {
-                Log.e("----------------------- JSONException --------------------------", "");
-                e.printStackTrace();
-            }
+        if (result != null) {
+            fragment.saveToSharedPreferences(result);
         } else {
             // If load nothing - annotate user about it.
             fragment.failToLoadData();

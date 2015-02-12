@@ -2,6 +2,7 @@ package com.amra.develop.githubusersviewer;
 
 
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -17,6 +18,8 @@ public class MainActivity extends ActionBarActivity {
     Fragment fragment;
 
     public void onCreate(Bundle savedInstanceState) {
+
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);

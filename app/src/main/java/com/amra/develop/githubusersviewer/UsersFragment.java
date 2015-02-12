@@ -2,13 +2,21 @@ package com.amra.develop.githubusersviewer;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 
 /**
  * Created by Anton Stukov
@@ -18,6 +26,7 @@ public class UsersFragment extends Fragment {
 
     private static String GITHUB_USERS_URL = "https://api.github.com/users";
 
+    public String data;
     // Arrays to store text data about users
     public static String[] logins, avatar_urls;
 
@@ -29,6 +38,8 @@ public class UsersFragment extends Fragment {
 
     MainActivity act;
     Context context;
+
+    FileCache fileCache;
 
     @Override
     public void onAttach(Activity _activity) {
@@ -66,7 +77,53 @@ public class UsersFragment extends Fragment {
         }
         // ...else load data
         else {
-            tryToLoadUserData();
+            // First - check data in sharedPreferences
+            SharedPreferences sPref = act.getPreferences(act.MODE_PRIVATE);
+            String data = sPref.getString("USER_DATA", "no data");
+            // If exist - use it
+            if (!"no data".equals(data)) {
+                parseJSON(data);
+            }
+            // If no exist - load from Internet
+            else {
+                tryToLoadUserData();
+            }
+        }
+
+    }
+
+    public void tryToLoadUserData() {
+        new UsersDataAsyncLoading(this).execute(GITHUB_USERS_URL);
+    }
+
+    public void saveToSharedPreferences(String data) {
+        // "Cache" users data to device
+        SharedPreferences sPref = act.getPreferences(Activity.MODE_PRIVATE);
+        SharedPreferences.Editor ed = sPref.edit();
+        ed.putString("USER_DATA", data);
+        ed.apply(); //ed.commit();
+        //
+        parseJSON(data);
+    }
+
+    public void parseJSON(String result) {
+        try {
+            // Create an JSON array from result string: [ {...}, ..., {...}]
+            JSONArray jsonarray = new JSONArray(result);
+            // Create simple arrays with data
+            logins = new String[jsonarray.length()];
+            avatar_urls = new String[jsonarray.length()];
+            for(int i=0; i<jsonarray.length(); i++){
+                JSONObject obj = jsonarray.getJSONObject(i);
+                logins[i] = obj.getString("login");
+                avatar_urls[i] = obj.getString("avatar_url");
+            }
+            // build UI
+            buildList();
+
+        } catch (JSONException e) {
+            Log.e("----------------------- JSONException --------------------------", "");
+            e.printStackTrace();
         }
     }
 
@@ -74,10 +131,6 @@ public class UsersFragment extends Fragment {
         act.findViewById(R.id.loading_panel).setVisibility(View.GONE);
         listAdapter = new ListAdapter (context, logins, avatar_urls);
         list.setAdapter(listAdapter);
-    }
-
-    public void tryToLoadUserData() {
-        new UsersDataAsyncLoading(this).execute(GITHUB_USERS_URL);
     }
 
     // If data not loaded - allow to user try again.
@@ -96,5 +149,9 @@ public class UsersFragment extends Fragment {
     // Clear cache to test and test again.
     public void clearCache() {
         imagePreLoader.clearCache();
+        SharedPreferences sPref = act.getPreferences(act.MODE_PRIVATE);
+        SharedPreferences.Editor ed = sPref.edit();
+        ed.putString("USER_DATA", null);
+        ed.apply();
     }
 }
