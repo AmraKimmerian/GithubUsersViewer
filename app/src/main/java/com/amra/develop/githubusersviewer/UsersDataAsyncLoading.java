@@ -3,9 +3,6 @@ package com.amra.develop.githubusersviewer;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by Anton Stukov
@@ -13,7 +10,7 @@ import org.json.JSONObject;
  */
 public class UsersDataAsyncLoading extends AsyncTask<String, Void, String> {
 
-    //String jsonStr;
+
     UsersFragment fragment;
     public UsersDataAsyncLoading(UsersFragment _fragment) {
         fragment = _fragment;
