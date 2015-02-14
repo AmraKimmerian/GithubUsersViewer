@@ -1,7 +1,7 @@
 package com.amra.develop.githubusersviewer;
 
 /**
- * Created by Amra on 18.12.2014.
+ * Created by Anton Stukov on 14.02.2015.
  */
 
 import android.content.Context;
@@ -14,52 +14,51 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 
 public class ListAdapter extends BaseAdapter {
 
     Context ctx;
     LayoutInflater lInflater;
-    String[] logins, avatar_urls;
     Resources res;
     public ImageLoader imageLoader;
+    ArrayList<User> userDataList;
 
-
-    public ListAdapter(Context context, String[] _logins, String[] _avatar_urls) {
+    public ListAdapter(Context context, ArrayList<User> _userDataList) {
         ctx = context;
-        logins = _logins;
-        avatar_urls = _avatar_urls;
+        userDataList = _userDataList;
         lInflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        //res = ctx.getResources();
         imageLoader = new ImageLoader(ctx.getApplicationContext());
 
     }
 
-    // кол-во элементов
+    // Elements number
     @Override
     public int getCount() {
-        return logins.length;
+        return userDataList.size();
     }
 
-    // элемент по позиции
     @Override
     public Object getItem(int position) {
         return position;
     }
 
-    // id по позиции
     @Override
     public long getItemId(int position) {
         return position;
     }
 
-    // пункт списка
+    // Element
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        //Log.i("MY", ": adapter.getView " + position);
 
         View view = convertView;
+
         if (view == null) {
+
             view = lInflater.inflate(R.layout.list_item, parent, false);
+
             // to avoid much invokes of findViewById method
             ViewHolder holder = new ViewHolder();
             holder.hLogin =  (TextView) view.findViewById(R.id.login);
@@ -67,13 +66,18 @@ public class ListAdapter extends BaseAdapter {
             view.setTag(holder);
 
         }
-        if (logins[position] != null) {
+
+        if (userDataList.get(position) != null) {
+
             ViewHolder holder = (ViewHolder) view.getTag();
-            holder.hLogin.setText(logins[position]);
+            holder.hLogin.setText(userDataList.get(position).login);
+
             // Lazy image loading
-            imageLoader.DisplayImage(avatar_urls[position],  holder.hAvatar);
+            imageLoader.DisplayImage(userDataList.get(position).avatar_url,  holder.hAvatar);
         }
+
         return view;
+
     }
 
     // Class to avoid much invokes of findViewById method

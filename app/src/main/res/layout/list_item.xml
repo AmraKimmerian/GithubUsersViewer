@@ -21,8 +21,8 @@
         android:text="User name" />
 
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="@dimen/listview_item_height"
+        android:layout_height="@dimen/listview_item_height"
         android:id="@+id/avatar"
         android:src="@drawable/user_github"
         android:cropToPadding="false" />
